@@ -48,14 +48,27 @@ function oik_register_questions() {
 	$post_type_args['description'] = 'Problem Solving questions. e.g. Has it ever worked?';
 	$post_type_args['hierarchical'] = true;
 	$post_type_args['has_archive'] = true;
-	$post_type_args['supports'] = array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes', 'publicize', 'author' );
+	$post_type_args['supports'] = array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes', 'publicize', 'author', 'clone' );
 	$post_type_args['show_in_rest'] = true;
+    $post_type_args['template'] = oik_questions_CPT_template();
 	//$post_type_args = oik_sites_capabilities( $post_type_args );
 	bw_register_post_type( $post_type, $post_type_args );
 	bw_register_field( "_step_ref", "noderef", "Reference",
 		array( '#type' => 'oik_presentation', '#optional' => true, '#multiple' => 34 )  );
 	bw_register_field_for_object_type( "_step_ref", $post_type );
 	add_filter( "manage_edit-${post_type}_columns", "oik_problem_columns", 10, 1 );
+}
+
+function oik_questions_CPT_template() {
+    $template = array();
+    $template[] = ['core/heading', [ 'content' => "Response:" ] ];
+    $template[] = ['core/paragraph', ['placeholder' => 'Type some responses to the question.' ]];
+    $template[] = ['core/more' ];
+    $template[] = ['core/heading', [ 'content' => "Reference:" ] ];
+    $template[] = ['core/shortcode', [ 'text' => '[bw_field _step_ref]'] ];
+    $template[] = ['core/heading', [ 'content' => 'Related questions:' ] ];
+    $template[] = ['core/shortcode', [ 'text' => '[bw_related post_type=question meta_key=_step_ref meta_value=_step_ref]'] ];
+    return $template;
 }
 
 /**
@@ -71,15 +84,28 @@ function oik_register_problems() {
 	$post_type_args['label'] = 'Problems';
 	//$post_type_args['singular_label'] = 'Business';
 	$post_type_args['description'] = 'Examples of Problems associated with a particular step i.e. question';
-	$post_type_args['hierarchical'] = true;
+	$post_type_args['hierarchical'] = false;
 	$post_type_args['has_archive'] = true;
-	$post_type_args['supports'] = array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'publicize', 'author' );
+	$post_type_args['supports'] = array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'publicize', 'author', 'clone' );
 	$post_type_args['show_in_rest'] = true;
-	// Don't think we need capabilities yet
+    $post_type_args['template'] = oik_problems_CPT_template();
 	bw_register_post_type( $post_type, $post_type_args );
 	bw_register_field_for_object_type( "_step_ref", $post_type );
 	add_filter( "manage_edit-${post_type}_columns", "oik_problem_columns", 10, 1 );
 }
+
+function oik_problems_CPT_template() {
+    $template = array();
+    //$template[] = ['core/block', [ /* No ref! */ ] ];
+    $template[] = ['core/paragraph', ['placeholder' => 'Type something about the problem. Insert a reusable block above ' ]];
+    $template[] = ['core/more' ];
+    $template[] = ['core/heading', [ 'content' => "Reference:" ] ];
+    $template[] = ['core/shortcode', [ 'text' => '[bw_field _step_ref]'] ];
+    $template[] = ['core/heading', [ 'content' => 'Related questions:' ] ];
+    $template[] = ['core/shortcode', [ 'text' => '[bw_related post_type=question meta_key=_step_ref meta_value=_step_ref]'] ];
+    return $template;
+}
+
 
 
 /**
