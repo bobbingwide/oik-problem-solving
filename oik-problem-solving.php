@@ -4,7 +4,7 @@ Plugin Name: oik-problem-solving
 Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-problem-solving
 Description: Custom Post Types for Problem Solving
 Depends: oik base plugin, oik-fields
-Version: 0.0.0
+Version: 0.0.1
 Author: bobbingwide
 Author URI: https://www.bobbingwide.com/about-bobbing-wide
 License: GPL2
